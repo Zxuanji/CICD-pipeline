@@ -25,7 +25,7 @@ jobs:
       with: 
         slack_token: ${{ secrets.SLACK_TOKEN }}
         channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-        file_path: 'go.mod'
+        file_path: 'trivy-results.sarif'
         initial_comment: 'post by Zxuanji'
 
     
