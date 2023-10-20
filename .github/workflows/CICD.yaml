@@ -17,7 +17,7 @@ jobs:
         scan-type: 'fs'
         ignore-unfixed: true
         format: 'sarif'
-        output: 'trivy-results.sarif'
+        output: 'go.mod (gomod)'
         severity: 'CRITICAL,HIGH'
 
     - name: upload files to the slack
