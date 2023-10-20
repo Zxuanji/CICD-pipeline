@@ -34,6 +34,6 @@ jobs:
         initial_comment: 'post by Zxuanji'
 
     - name: terminate by failure
-      uses: exit 1
+      run: exit 1
 
     
