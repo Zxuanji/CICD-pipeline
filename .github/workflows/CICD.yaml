@@ -17,8 +17,12 @@ jobs:
         scan-type: 'fs'
         ignore-unfixed: true
         format: 'sarif'
-        output: 'go.mod (gomod)'
+        output: 'trivy-results.sarif'
         severity: 'CRITICAL,HIGH'
+
+    - name: list directory
+      id: list_directory
+      run: echo "$(ls -l)"
 
     - name: upload files to the slack
       uses: MeilCli/slack-upload-file@v3
