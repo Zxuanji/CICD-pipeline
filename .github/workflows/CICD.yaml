@@ -29,6 +29,8 @@ jobs:
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_COLOR: ${{ job.status}}
+        SLACK_TITLE: Scan failed - Zhuxuanji
+        SLACK_MESSAGE: Failed trivy scan, see uploaded report
 
     - name: upload files to the slack
       uses: MeilCli/slack-upload-file@v3
