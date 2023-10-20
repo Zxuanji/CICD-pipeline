@@ -9,40 +9,43 @@ jobs:
     steps:
     - name: checkout my source
       id: check_out_my_source
-      uses: actions/checkout@v4
-
-    - name: Build an image from Dockerfile
-      run: |
-        docker build -t docker.io/zxuanji/imagename1:${{ github.sha }} .
+      uses: actions/checkout@v3
   
-    - name: Run Trivy vulnerability scanner
+    - name: Run Trivy vulnerability scanner in repo mode
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: 'docker.io/zxuanji/imagename1:${{ github.sha }}'
-        format: 'table'
-        exit-code: '1'
+        scan-type: 'fs'
         ignore-unfixed: true
-        vuln-type: 'os,library'
-        severity: 'CRITICAL,HIGH'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        severity: 'CRITICAL'
 
-    - name: Send custom JSON data to Slack workflow
-      id: slack
-      uses: slackapi/slack-github-action@v1.24.0
-      with:
-        # For posting a rich message using Block Kit
-        payload: |
-          {
-            "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-                }  
-              }
-            ]
-          }
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK        
+    - name: upload files to the slack
+      uses: MeilCli/slack-upload-file@v3
+      with: 
+        slack_token: ${{ secrets.SLACK_TOKEN }}
+        channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+        file_path: 'docs/*.txt'
+        initial_comment: 'post by Zxuanji'
+
+    # - name: Send custom JSON data to Slack workflow
+    #   id: slack
+    #   uses: slackapi/slack-github-action@v1.24.0
+    #   with:
+    #     # For posting a rich message using Block Kit
+    #     payload: |
+    #       {
+    #         "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+    #         "blocks": [
+    #           {
+    #             "type": "section",
+    #             "text": {
+    #               "type": "mrkdwn",
+    #               "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+    #             }  
+    #           }
+    #         ]
+    #       }
+    #   env:
+    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK        
