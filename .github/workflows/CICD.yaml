@@ -20,6 +20,10 @@ jobs:
         output: 'trivy-results.txt'
         severity: 'CRITICAL,HIGH'
     
+    - name: terminate in failure
+      run: exit 1
+      
+    
     - name: Scan failed - ZhuXuanji
       uses: rtCamp/action-slack-notify@v2
       env:
@@ -33,7 +37,6 @@ jobs:
         file_path: 'trivy-results.txt'
         initial_comment: 'post by Zxuanji'
 
-    - name: terminate by failure
-      run: exit 1
+   
 
     
