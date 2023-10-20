@@ -20,7 +20,7 @@ jobs:
         output: 'trivy-results.txt'
         severity: 'CRITICAL,HIGH'
     
-    - name: Scan failed - Zhu
+    - name: Scan failed - ZhuXuanji
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
@@ -32,5 +32,8 @@ jobs:
         channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
         file_path: 'trivy-results.txt'
         initial_comment: 'post by Zxuanji'
+
+    - name: terminate by failure
+      uses: exit 1
 
     
