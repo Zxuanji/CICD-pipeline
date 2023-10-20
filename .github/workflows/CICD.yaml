@@ -25,11 +25,14 @@ jobs:
     
     - name: Scan failed - ZhuXuanji
       uses: rtCamp/action-slack-notify@v2
+      if: always()
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_COLOR: ${{ job.status}}
 
     - name: upload files to the slack
       uses: MeilCli/slack-upload-file@v3
+      if: always()
       with: 
         slack_token: ${{ secrets.SLACK_TOKEN }}
         channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
