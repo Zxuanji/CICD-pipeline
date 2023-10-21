@@ -36,13 +36,13 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-        
+
     -
       name: Build and push
       uses: docker/build-push-action@v5
       with: 
         push: true
-        tags: zxuanji/go-fortune:latest
+        tags: zxuanji/go-fortune:${{ github.sha }}
     
     # - name: Scan failed - ZhuXuanji
     #   uses: rtCamp/action-slack-notify@v2
