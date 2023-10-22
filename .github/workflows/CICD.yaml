@@ -1,68 +1,110 @@
-name: CICD Workshop
+# name: CICD Workshop
 
-on: [push]
+# on: [push]
 
-jobs:
-  cicd-workshop:
-    runs-on: ubuntu-latest
+# jobs:
+#   cicd-workshop:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: checkout my source
-      id: check_out_my_source
-      uses: actions/checkout@v3
+#     steps:
+#     - name: checkout my source
+#       id: check_out_my_source
+#       uses: actions/checkout@v3
   
-    - name: Run Trivy vulnerability scanner in repo mode
-      uses: aquasecurity/trivy-action@master
-      with:
-        scan-type: 'fs'
-        ignore-unfixed: true
-        format: 'table'
-        output: 'trivy-results.txt'
-        severity: 'CRITICAL,HIGH'
-        # exit-code: 1
-
-    -
-      name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
+#     - name: Run Trivy vulnerability scanner in repo mode
+#       uses: aquasecurity/trivy-action@master
+#       with:
+#         scan-type: 'fs'
+#         ignore-unfixed: true
+#         format: 'table'
+#         output: 'trivy-results.txt'
+#         severity: 'CRITICAL,HIGH'
+#         exit-code: 1
     
-    -
-      name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+#     - name: Scan failed - ZhuXuanji
+#       uses: rtCamp/action-slack-notify@v2
+#       if: always()
+#       env:
+#         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+#         SLACK_COLOR: ${{ job.status}}
+#         SLACK_TITLE: Scan failed - Zhuxuanji
+#         SLACK_MESSAGE: Failed trivy scan, see uploaded report
 
-    -
-      name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with: 
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+#     - name: upload files to the slack
+#       uses: MeilCli/slack-upload-file@v3
+#       if: always()
+#       with: 
+#         slack_token: ${{ secrets.SLACK_TOKEN }}
+#         channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+#         file_path: 'trivy-results.txt'
+#         initial_comment: 'post by Zxuanji'
 
 
-    -
-      name: Build and push
-      uses: docker/build-push-action@v5
-      with: 
-        push: true
-        tags: zxuanji/go-fortune:${{ github.sha }}
+    name: CICD Workshop
+
+    on: [push]
     
-    # - name: Scan failed - ZhuXuanji
-    #   uses: rtCamp/action-slack-notify@v2
-    #   if: always()
-    #   env:
-    #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-    #     SLACK_COLOR: ${{ job.status}}
-    #     SLACK_TITLE: Scan failed - Zhuxuanji
-    #     SLACK_MESSAGE: Failed trivy scan, see uploaded report
+    jobs:
+      cicd-workshop:
+        runs-on: ubuntu-latest
+    
+        steps:
+        - name: checkout my source
+          id: check_out_my_source
+          uses: actions/checkout@v3
+      
+        - name: Run Trivy vulnerability scanner in repo mode
+          uses: aquasecurity/trivy-action@master
+          with:
+            scan-type: 'fs'
+            ignore-unfixed: true
+            format: 'table'
+            output: 'trivy-results.txt'
+            severity: 'CRITICAL'
+            
+    
+        -
+          name: Set up QEMU
+          uses: docker/setup-qemu-action@v3
+        
+        -
+          name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
+    
+        -
+          name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with: 
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+    
+    
+        -
+          name: Build and push
+          uses: docker/build-push-action@v5
+          id: build-and-push
+          with: 
+            push: true
+            tags: zxuanji/go-fortune:${{ github.sha }}
+    
+        - name: Install Cosign
+          uses: sigstore/cosign-installer@v3.1.1
+        
+        - name: Check install!
+          run: cosign version
 
-    # - name: upload files to the slack
-    #   uses: MeilCli/slack-upload-file@v3
-    #   if: always()
-    #   with: 
-    #     slack_token: ${{ secrets.SLACK_TOKEN }}
-    #     channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-    #     file_path: 'trivy-results.txt'
-    #     initial_comment: 'post by Zxuanji'
-
-
+        - name: Sign image with a key
+          run: |
+            cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
+          env: 
+            TAGS: ${{ github.sha }}
+            COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+            COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+            DIGEST: ${{ steps.build-and-push.outputs.digest }}
+        
+       
+    
+    
 
    
 
