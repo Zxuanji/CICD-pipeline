@@ -145,17 +145,13 @@ jobs:
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_COLOR: ${{ job.status}}
-        SLACK_TITLE: Scan failed - Zhuxuanji
+        SLACK_TITLE: Image build and signed
         SLACK_MESSAGE: |
-          *Ref:* ${{ github.ref }}
-          *Event:* ${{ github.event_name }}
-          *Actions URL:* ${{ github.workflow }}
-          *Commit:* ${{ github.sha }}
-          *Name:* WANG YIHAN
-          *Matriculation:* A0285882L
-          *Email:* e1221694@u.nus.edu
-          *Repository:* ${{ github.repository_url }}
-          *DockerHub URL:* https://hub.docker.com/repository/docker/codebuhui/fortunes/general
+          *Name:* ZHU XUANJI
+          *Matriculation:* A0285889X
+          *Email:* e1221701@u.nus.edu
+          *Repository:* ${{ github.repository }}
+          *DockerHub URL:* https://hub.docker.com/repository/docker/zxuanji/go-fortune/
     
 
    
