@@ -100,12 +100,12 @@
 
         - name: Sign image with a key
           run: |
-            cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
+            cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}"
           env: 
-            TAGS: ${{ github.sha }}
+            TAGS: zxuanji/go-fortune:${{ github.sha }}
             COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
             COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-            DIGEST: ${{ steps.build-and-push.outputs.digest }}
+            # DIGEST: ${{ steps.build-and-push.outputs.digest }}
         
        
     
