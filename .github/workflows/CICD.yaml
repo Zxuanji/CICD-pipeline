@@ -70,7 +70,7 @@ jobs:
         ignore-unfixed: true
         format: 'table'
         output: 'trivy-results.txt'
-        severity: 'CRITICAL'
+        severity: 'HIGH'
         exit-code: 1
 
 # Send failed notification to slack
@@ -78,7 +78,7 @@ jobs:
 
     - name: Scan failed - ZhuXuanji
       uses: rtCamp/action-slack-notify@v2
-      if: always()
+      if: failure()
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_COLOR: ${{ job.status}}
@@ -90,7 +90,7 @@ jobs:
 
     - name: upload files to the slack
       uses: MeilCli/slack-upload-file@v3
-      if: always()
+      if: failure()
       with: 
         slack_token: ${{ secrets.SLACK_TOKEN }}
         channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
