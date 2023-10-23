@@ -149,10 +149,11 @@ jobs:
           *Name:* ZHU XUANJI
           *Matriculation:* A0285889X
           *Email:* e1221701@u.nus.edu
-          *Git:* ${{ github.repository }}
+          *Git:* https://github.com/${{ github.repository }}
           *Image:* https://hub.docker.com/repository/docker/zxuanji/go-fortune/
     
 
    
 
     
+          
