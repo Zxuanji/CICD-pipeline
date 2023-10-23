@@ -61,6 +61,8 @@ jobs:
     - name: checkout my source
       id: check_out_my_source
       uses: actions/checkout@v3
+
+    
   
     - name: Run Trivy vulnerability scanner in repo mode
       id: run_trivy
@@ -139,7 +141,7 @@ jobs:
   
 
 
-    - name: Scan failed - ZhuXuanji
+    - name: send successful notification - ZhuXuanji
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
@@ -156,4 +158,3 @@ jobs:
    
 
     
-          
